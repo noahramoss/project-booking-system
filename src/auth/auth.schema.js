@@ -5,11 +5,15 @@ const passwordValidation = z
   .min(8, "La contraseña debe tener una longitud mínima de 8 caracteres")
   .regex(/[A-Z]/, "Debe tener al menos una mayúscula")
   .regex(/[0-9]/, "Debe tener al menos un número")
-  .regex(/[^a-zA-Z0-9]/, "Debe tener al menos un carácter especial");
+  .regex(/[^a-zA-Z0-9]/, "Debe tener al menos un carácter especial")
+  .max(255);
 
 export const registerSchema = z.object({
-  name: z.string().min(2, "El nombre debe tener al menos 2 caracteres"),
-  email: z.string().email("Debe ser un email válido"),
+  name: z
+    .string()
+    .min(2, "El nombre debe tener al menos 2 caracteres")
+    .max(100),
+  email: z.string().email("Debe ser un email válido").max(150),
   password: passwordValidation,
   role: z.enum(["USER", "MANAGER", "ADMIN"]).default("USER"),
 });
