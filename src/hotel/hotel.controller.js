@@ -40,13 +40,14 @@ export const createHotel = async (req, res, next) => {
 
 export const getAllHotels = async (req, res, next) => {
   try {
-    const { city, country, stars, page = 1, limit = 10 } = req.query;
+    const { name, city, country, stars, page = 1, limit = 10 } = req.query;
 
     const pageNumber = Number(page);
     const limitNumber = Number(limit);
     const skip = (pageNumber - 1) * limitNumber;
     const where = {};
 
+    if (name) where.name = { contains: name, mode: "insensitive" };
     if (city) where.city = { contains: city, mode: "insensitive" };
     if (country) where.country = { contains: country, mode: "insensitive" };
     if (stars) where.stars = parseInt(stars);

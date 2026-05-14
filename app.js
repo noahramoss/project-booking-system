@@ -8,7 +8,7 @@ const app = express();
 app.use(express.json());
 
 app.use("/api/auth", authRoutes);
-app.use("/api/hotels", hotelRoutes);
+app.use("/api/hotel", hotelRoutes);
 
 app.use(errorHandler); //Siempre debe ir el último
 

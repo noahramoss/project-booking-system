@@ -9,8 +9,10 @@ export const validateSchema = (schema) => {
     // 2. Comprobamos si la validación falló
     if (!result.success) {
       // En safeParse, los errores viven dentro de result.error.issues
-      const erroresZod = result.error.issues.map((issue) => issue.message);
-
+      // Extraemos el nombre del campo y el mensaje, por ejemplo: "city: La ciudad es obligatoria"
+      const erroresZod = result.error.issues.map(
+        (issue) => `${issue.path.join(".")}: ${issue.message}`,
+      );
       // Lanzamos nuestro AppError controlado
       return next(
         new AppError("Error de validación de datos", 400, erroresZod),

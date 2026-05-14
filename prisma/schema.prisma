@@ -52,7 +52,7 @@ model Hotel {
   description String?  @db.Text
   city        String   @db.VarChar(100)
   country     String   @db.VarChar(100)
-  stars       Int      @default(1)
+  stars       Int
   managerId   String   @map("manager_id")
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
