@@ -4,8 +4,20 @@ import AppError from "../utils/AppError.js";
 export const createHotel = async (req, res, next) => {
   try {
     const { name, city, country, stars, description } = req.body;
-
     const manager = req.user.id;
+
+    const existingHotel = await prisma.hotel.findFirst({
+      where: { name: name },
+    });
+
+    if (existingHotel) {
+      return next(
+        new AppError(
+          `Ya existe un hotel registrado con el nombre '${name}'`,
+          400,
+        ),
+      );
+    }
 
     const newHotel = await prisma.hotel.create({
       data: {
@@ -29,9 +41,16 @@ export const createHotel = async (req, res, next) => {
       },
     });
 
+    const formattedHotel = {
+      ...newHotel,
+      managerName: newHotel.manager.name,
+      managerEmail: newHotel.manager.email,
+      manager: undefined,
+    };
+
     res.status(201).json({
       message: "Hotel creado con éxito",
-      hotel: newHotel,
+      hotel: formattedHotel,
     });
   } catch (error) {
     next(error);
@@ -75,14 +94,21 @@ export const getAllHotels = async (req, res, next) => {
       },
     });
 
+    const formattedHotels = hotels.map((hotel) => ({
+      ...hotel,
+      managerName: hotel.manager.name,
+      managerEmail: hotel.manager.email,
+      manager: undefined,
+    }));
+
     res.status(200).json({
-      results: hotels.length,
+      results: formattedHotels.length,
       pagination: {
         totalRecords: totalHotels,
         currentPage: pageNumber,
         totalPages: Math.ceil(totalHotels / limitNumber),
       },
-      hotels: hotels,
+      hotels: formattedHotels,
     });
   } catch (error) {
     next(error);
@@ -113,7 +139,14 @@ export const getHotelById = async (req, res, next) => {
       return next(new AppError("Hotel no encontrado", 404));
     }
 
-    res.status(200).json(hotel);
+    const formattedHotel = {
+      ...hotel,
+      managerName: hotel.manager.name,
+      managerEmail: hotel.manager.email,
+      manager: undefined,
+    };
+
+    res.status(200).json(formattedHotel);
   } catch (error) {
     next(error);
   }
@@ -157,9 +190,16 @@ export const updateHotel = async (req, res, next) => {
       },
     });
 
+    const formattedHotel = {
+      ...hotel,
+      managerName: hotel.manager.name,
+      managerEmail: hotel.manager.email,
+      manager: undefined,
+    };
+
     res.status(200).json({
       message: "Hotel actualizado",
-      hotel: hotel,
+      hotel: formattedHotel,
     });
   } catch (error) {
     next(error);

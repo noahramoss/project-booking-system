@@ -12,7 +12,7 @@ import { createHotelSchema, updateHotelSchema } from "./hotel.schema.js";
 
 const router = Router();
 
-// Endpoint: GET /api/hotel/getAll
+// Endpoint: GET /api/hotel
 router.get("/", getAllHotels);
 
 // Endpoint: POST /api/hotel/create
@@ -24,10 +24,10 @@ router.post(
   createHotel,
 );
 
-// Endpoint: GET /api/hotel/getAll
+// Endpoint: GET /api/hotel
 router.get("/:id", getHotelById);
 
-// Endpoint: PATCH /api/hotel/update
+// Endpoint: PATCH /api/hotel/:id
 router.patch(
   "/:id",
   protect,
@@ -36,7 +36,7 @@ router.patch(
   updateHotel,
 );
 
-// Endpoint: DELETE /api/hotel/delete
+// Endpoint: DELETE /api/hotel/:id
 router.delete("/:id", protect, restrictTo("MANAGER", "ADMIN"), deleteHotel);
 
 export default router;

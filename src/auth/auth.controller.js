@@ -26,17 +26,18 @@ export const register = async (req, res, next) => {
         passwordHash,
         role: role || "USER",
       },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+      },
     });
 
     //Devolvemos los datos del usuario creado sin la contraseña
     res.status(201).json({
       message: "Usuario registrado con éxito",
-      user: {
-        id: newUser.id,
-        name: newUser.name,
-        email: newUser.email,
-        role: newUser.role,
-      },
+      user: newUser,
     });
   } catch (error) {
     next(error);
@@ -48,7 +49,16 @@ export const login = async (req, res, next) => {
     const { email, password } = req.body;
 
     //Buscamos el usuario para ver si existe en la base de datos
-    const user = await prisma.user.findUnique({ where: { email } });
+    const user = await prisma.user.findUnique({
+      where: { email },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        passwordHash: true,
+      },
+    });
     if (!user) {
       return next(new AppError("Credenciales inválidas", 401));
     }
@@ -66,16 +76,13 @@ export const login = async (req, res, next) => {
       { expiresIn: "7d" },
     );
 
-    //Respuesta del login del usuario
+    //Respuesta del login del usuario - aplanamos quitando passwordHash
+    const { passwordHash: _, ...userData } = user;
+
     res.status(200).json({
       message: "Usuario logeado con éxito",
       token,
-      user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-      },
+      user: userData,
     });
   } catch (error) {
     next(error);

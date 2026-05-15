@@ -3,7 +3,7 @@ import { z } from "zod";
 // Esta validación estricta SOLO se usa al crear o cambiar la contraseña
 const passwordValidation = z
   .string({
-    required_error: "La contraseña es obligatoria",
+    message: "La contraseña es obligatoria",
   })
   .min(8, "La contraseña debe tener una longitud mínima de 8 caracteres")
   .regex(/[A-Z]/, "La contraseña debe tener al menos una mayúscula")
@@ -17,15 +17,14 @@ const passwordValidation = z
 export const registerSchema = z.object({
   name: z
     .string({
-      required_error: "El nombre es obligatorio",
-      invalid_type_error: "El nombre debe ser una cadena de texto",
+      message: "El nombre es obligatorio y debe ser una cadena de texto",
     })
     .trim() // 👈 Limpia espacios al inicio y final
     .min(2, "El nombre debe tener al menos 2 caracteres")
     .max(100),
   email: z
     .string({
-      required_error: "El email es obligatorio",
+      message: "El email es obligatorio",
     })
     .trim()
     .email("Debe ser un email válido")
@@ -37,14 +36,14 @@ export const registerSchema = z.object({
 export const loginSchema = z.object({
   email: z
     .string({
-      required_error: "El email es obligatorio",
+      message: "El email es obligatorio",
     })
     .trim()
     .email("Debe ser un email válido"),
   //Para login, solo exigimos que envíe un string. Bcrypt se encarga del resto.
   password: z
     .string({
-      required_error: "La contraseña es obligatoria",
+      message: "La contraseña es obligatoria",
     })
     .min(1, "La contraseña no puede estar vacía"),
 });
