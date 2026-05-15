@@ -57,7 +57,7 @@ model Hotel {
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
 
-  manager User   @relation(fields: [managerId], references: [id])
+  manager User   @relation(fields: [managerId], references: [id], onDelete: Cascade)
   rooms   Room[]
 
   @@map("hotels")
@@ -73,7 +73,7 @@ model Room {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  hotel    Hotel     @relation(fields: [hotelId], references: [id])
+  hotel    Hotel     @relation(fields: [hotelId], references: [id], onDelete: Cascade)
   bookings Booking[]
 
   @@unique([hotelId, number])
@@ -91,8 +91,8 @@ model Booking {
   createdAt  DateTime      @default(now()) @map("created_at")
   updatedAt  DateTime      @updatedAt @map("updated_at")
 
-  user User @relation(fields: [userId], references: [id])
-  room Room @relation(fields: [roomId], references: [id])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  room Room @relation(fields: [roomId], references: [id], onDelete: Cascade)
 
   @@map("bookings")
 }
