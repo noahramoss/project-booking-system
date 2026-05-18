@@ -9,12 +9,20 @@ Soy **Noah Ramos González**, estudiante del Bootcamp de Desarrollo Web. Este pr
 ## Tiempo de Desarrollo
 
 El proyecto se ha desarrollado en un tiempo estimado de **43 horas**:
+
 - Lunes a Viernes: 09:00 a 18:00 (con 1 hora de descanso) -> 40 horas.
 - Sábado: 10:00 a 13:00 -> 3 horas.
 
 ## Resultado
 
 El resultado es una **API REST completamente funcional y segura** que sirve como motor para una plataforma de reservas hoteleras. Cumple con todos los requisitos obligatorios del proyecto Midterm, incluyendo un CRUD completo de 5 recursos, autenticación basada en JWT, autorización por roles (USER, MANAGER, ADMIN), validación robusta de datos de entrada y cobertura de tests de integración.
+
+## 🚀 Despliegue en Producción
+
+La API se encuentra desplegada y accesible públicamente en Render:
+**URL Base:** `https://project-booking-system.onrender.com`
+
+*Nota: Al estar alojada en el plan gratuito de Render, la primera petición después de un tiempo de inactividad puede tardar unos segundos en responder mientras el servidor se reactiva.*
 
 ## Tecnologías utilizadas
 
@@ -284,18 +292,18 @@ erDiagram
 
 Durante el desarrollo, nos encontramos con varios retos técnicos interesantes:
 
-1. **Eliminación en cascada de usuarios:** 
-   * *Problema:* Al intentar que un usuario eliminara su propia cuenta (`DELETE /api/user/me`), PostgreSQL arrojaba errores de restricción de clave foránea porque el usuario tenía reservas y hoteles asociados.
-   * *Solución:* Modificamos el esquema de Prisma (`schema.prisma`) añadiendo explícitamente `onDelete: Cascade` en las relaciones clave (ej. de Hotel a User, de Room a Hotel, y de Booking a User/Room).
+1. **Eliminación en cascada de usuarios:**
+   - _Problema:_ Al intentar que un usuario eliminara su propia cuenta (`DELETE /api/user/me`), PostgreSQL arrojaba errores de restricción de clave foránea porque el usuario tenía reservas y hoteles asociados.
+   - _Solución:_ Modificamos el esquema de Prisma (`schema.prisma`) añadiendo explícitamente `onDelete: Cascade` en las relaciones clave (ej. de Hotel a User, de Room a Hotel, y de Booking a User/Room).
 
 2. **Aplanamiento de las respuestas JSON:**
-   * *Problema:* Prisma por defecto anida los resultados de las relaciones (ej. `booking.room.hotel.name`), lo cual hacía que el JSON de respuesta fuera profundo e incómodo para un frontend.
-   * *Solución:* Implementamos una lógica de mapeo en los controladores para "aplanar" (`flatten`) las respuestas, extrayendo campos como `hotelName` o `managerName` al primer nivel del objeto devuelto.
+   - _Problema:_ Prisma por defecto anida los resultados de las relaciones (ej. `booking.room.hotel.name`), lo cual hacía que el JSON de respuesta fuera profundo e incómodo para un frontend.
+   - _Solución:_ Implementamos una lógica de mapeo en los controladores para "aplanar" (`flatten`) las respuestas, extrayendo campos como `hotelName` o `managerName` al primer nivel del objeto devuelto.
 
 3. **Validación de fechas solapadas y lógicas cruzadas en Zod:**
-   * *Problema:* Necesitábamos asegurar en el `schema` que la fecha de `checkOut` fuera estrictamente posterior a la de `checkIn`, algo que la validación básica de tipos no cubre.
-   * *Solución:* Usamos el método `.refine()` de Zod en el esquema de reservas para añadir esta validación cruzada antes de que la petición siquiera llegue al controlador.
+   - _Problema:_ Necesitábamos asegurar en el `schema` que la fecha de `checkOut` fuera estrictamente posterior a la de `checkIn`, algo que la validación básica de tipos no cubre.
+   - _Solución:_ Usamos el método `.refine()` de Zod en el esquema de reservas para añadir esta validación cruzada antes de que la petición siquiera llegue al controlador.
 
 4. **Tests que limpiaban la base de datos concurrentemente:**
-   * *Problema:* Al añadir Vitest, los tests fallaban aleatoriamente porque se ejecutaban en paralelo y el `cleanDatabase()` de un archivo borraba los datos que otro archivo estaba usando.
-   * *Solución:* Configuramos `vitest.config.js` con `fileParallelism: false` para forzar la ejecución secuencial de los archivos de prueba.
+   - _Problema:_ Al añadir Vitest, los tests fallaban aleatoriamente porque se ejecutaban en paralelo y el `cleanDatabase()` de un archivo borraba los datos que otro archivo estaba usando.
+   - _Solución:_ Configuramos `vitest.config.js` con `fileParallelism: false` para forzar la ejecución secuencial de los archivos de prueba.
