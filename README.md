@@ -17,6 +17,11 @@ El proyecto se ha desarrollado en un tiempo estimado de **43 horas**:
 
 El resultado es una **API REST completamente funcional y segura** que sirve como motor para una plataforma de reservas hoteleras. Cumple con todos los requisitos obligatorios del proyecto Midterm, incluyendo un CRUD completo de 5 recursos, autenticación basada en JWT, autorización por roles (USER, MANAGER, ADMIN), validación robusta de datos de entrada y cobertura de tests de integración.
 
+## 🖥️ Interfaz de Usuario (Frontend)
+
+Como extra para facilitar la evaluación de la API y demostrar habilidades *Full-Stack*, se ha desarrollado un cliente web interactivo en la carpeta `/frontend` utilizando **React 18** y **Vite**. Esta interfaz consume directamente la API e implementa el flujo completo de autenticación, control de accesos y reservas según el rol del usuario.
+
+👉 [Ver documentación detallada del frontend](./frontend/README.md)
 ## 🚀 Despliegue en Producción
 
 La API se encuentra desplegada y accesible públicamente en Render:
